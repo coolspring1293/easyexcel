@@ -1,18 +1,17 @@
 package com.alibaba.easyexcel.test.demo.write;
 
-import java.io.File;
-import java.io.InputStream;
-import java.net.URL;
-
 import com.alibaba.excel.annotation.ExcelProperty;
+import com.alibaba.excel.annotation.format.DateTimeFormat;
 import com.alibaba.excel.annotation.write.style.ColumnWidth;
+import com.alibaba.excel.annotation.write.style.ContentLoopMerge;
 import com.alibaba.excel.annotation.write.style.ContentRowHeight;
-import com.alibaba.excel.converters.string.StringImageConverter;
 import com.alibaba.excel.metadata.data.WriteCellData;
 
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;
+
+import java.util.Date;
 
 /**
  * 图片导出类
@@ -23,27 +22,89 @@ import lombok.Setter;
 @Setter
 @EqualsAndHashCode
 @ContentRowHeight(100)
-@ColumnWidth(100 / 8)
 public class ImageDemoData {
-    private File file;
-    private InputStream inputStream;
-    /**
-     * 如果string类型 必须指定转换器，string默认转换成string
-     */
-    @ExcelProperty(converter = StringImageConverter.class)
-    private String string;
-    private byte[] byteArray;
-    /**
-     * 根据url导出
-     *
-     * @since 2.1.1
-     */
-    private URL url;
 
-    /**
-     * 根据文件导出 并设置导出的位置。
-     *
-     * @since 3.0.0-beta1
-     */
-    private WriteCellData<Void> writeCellDataFile;
+    @ColumnWidth(20)
+    @ExcelProperty(value = "反馈单号")
+    private String feedbackNumber;
+
+    @ColumnWidth(5)
+    @ExcelProperty(value = "反馈人类型")
+    private String feedbackType;
+
+    @ColumnWidth(10)
+    @ExcelProperty(value = "反馈渠道")
+    private String feedbackChannel;
+
+    @ColumnWidth(10)
+    @ExcelProperty(value = "反馈人")
+    private String feedbackUserName;
+
+    @ColumnWidth(15)
+    @ExcelProperty(value = "反馈人手机号")
+    private String feedbackMobile;
+
+    @ColumnWidth(20)
+    @ExcelProperty("反馈时间")
+    @DateTimeFormat("yyyy-MM-dd HH:mm:ss")
+    private Date feedbackDateTime;
+
+    @ColumnWidth(15)
+    @ExcelProperty(value = "运营方")
+    private String operator;
+
+    @ColumnWidth(15)
+    @ExcelProperty(value = "园区名称")
+    private String parkName;
+
+    @ColumnWidth(10)
+    @ExcelProperty(value = "问题类型")
+    private String questionType;
+
+    @ColumnWidth(30)
+    @ExcelProperty(value = "描述")
+    private String describe;
+
+    @ColumnWidth(10)
+    @ExcelProperty(value = "处理状态")
+    private String processingStatus;
+
+    @ColumnWidth(10)
+    @ContentLoopMerge(columnExtend = 9)
+    @ExcelProperty(value = "图片")
+    private WriteCellData<Void> picture0;
+
+    @ColumnWidth(10)
+    @ExcelProperty(value = "图片")
+    private WriteCellData<Void> picture1;
+
+    @ColumnWidth(10)
+    @ExcelProperty(value = "图片")
+    private WriteCellData<Void> picture2;
+
+    @ColumnWidth(10)
+    @ExcelProperty(value = "图片")
+    private WriteCellData<Void> picture3;
+
+    @ColumnWidth(10)
+    @ExcelProperty(value = "图片")
+    private WriteCellData<Void> picture4;
+
+    @ColumnWidth(10)
+    @ExcelProperty(value = "图片")
+    private WriteCellData<Void> picture5;
+
+    @ColumnWidth(10)
+    @ExcelProperty(value = "图片")
+    private WriteCellData<Void> picture6;
+
+    @ColumnWidth(10)
+    @ExcelProperty(value = "图片")
+    private WriteCellData<Void> picture7;
+
+    @ColumnWidth(10)
+    @ExcelProperty(value = "图片")
+    private WriteCellData<Void> picture8;
+
+
 }

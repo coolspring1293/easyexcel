@@ -2,9 +2,9 @@ package com.alibaba.easyexcel.test.demo.write;
 
 import java.io.File;
 import java.io.InputStream;
-import java.net.URL;
+import java.lang.reflect.Field;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.List;
@@ -21,15 +21,11 @@ import com.alibaba.excel.annotation.write.style.ColumnWidth;
 import com.alibaba.excel.annotation.write.style.ContentRowHeight;
 import com.alibaba.excel.annotation.write.style.HeadRowHeight;
 import com.alibaba.excel.enums.CellDataTypeEnum;
-import com.alibaba.excel.metadata.data.CommentData;
-import com.alibaba.excel.metadata.data.FormulaData;
-import com.alibaba.excel.metadata.data.HyperlinkData;
+import com.alibaba.excel.metadata.data.*;
 import com.alibaba.excel.metadata.data.HyperlinkData.HyperlinkType;
-import com.alibaba.excel.metadata.data.ImageData;
 import com.alibaba.excel.metadata.data.ImageData.ImageType;
-import com.alibaba.excel.metadata.data.RichTextStringData;
-import com.alibaba.excel.metadata.data.WriteCellData;
 import com.alibaba.excel.util.BooleanUtils;
+import com.alibaba.excel.util.DateUtils;
 import com.alibaba.excel.util.FileUtils;
 import com.alibaba.excel.util.ListUtils;
 import com.alibaba.excel.write.handler.CellWriteHandler;
@@ -232,6 +228,8 @@ public class WriteTest {
         EasyExcel.write(fileName, ConverterData.class).sheet("模板").doWrite(data());
     }
 
+    private static final DateTimeFormatter DATE_TIME_FORMATTER = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+
     /**
      * 图片导出
      * <p>
@@ -247,68 +245,55 @@ public class WriteTest {
         // 1. 将图片上传到oss 或者其他存储网站: https://www.aliyun.com/product/oss ，然后直接放链接
         // 2. 使用: https://github.com/coobird/thumbnailator 或者其他工具压缩图片
 
-        String imagePath = TestFileUtil.getPath() + "converter" + File.separator + "img.jpg";
+        String imagePath = TestFileUtil.getPath() + "converter" + File.separator + "iOS.png";
         try (InputStream inputStream = FileUtils.openInputStream(new File(imagePath))) {
             List<ImageDemoData> list = ListUtils.newArrayList();
-            ImageDemoData imageDemoData = new ImageDemoData();
-            list.add(imageDemoData);
-            // 放入五种类型的图片 实际使用只要选一种即可
-            imageDemoData.setByteArray(FileUtils.readFileToByteArray(new File(imagePath)));
-            imageDemoData.setFile(new File(imagePath));
-            imageDemoData.setString(imagePath);
-            imageDemoData.setInputStream(inputStream);
-            imageDemoData.setUrl(new URL(
-                "https://raw.githubusercontent.com/alibaba/easyexcel/master/src/test/resources/converter/img.jpg"));
 
-            // 这里演示
-            // 需要额外放入文字
-            // 而且需要放入2个图片
-            // 第一个图片靠左
-            // 第二个靠右 而且要额外的占用他后面的单元格
-            WriteCellData<Void> writeCellData = new WriteCellData<>();
-            imageDemoData.setWriteCellDataFile(writeCellData);
-            // 这里可以设置为 EMPTY 则代表不需要其他数据了
-            writeCellData.setType(CellDataTypeEnum.STRING);
-            writeCellData.setStringValue("额外的放一些文字");
+            for(int x = 1; x < 100; ++ x) {
+                ImageDemoData imageDemoData = new ImageDemoData();
 
-            // 可以放入多个图片
-            List<ImageData> imageDataList = new ArrayList<>();
-            ImageData imageData = new ImageData();
-            imageDataList.add(imageData);
-            writeCellData.setImageDataList(imageDataList);
-            // 放入2进制图片
-            imageData.setImage(FileUtils.readFileToByteArray(new File(imagePath)));
-            // 图片类型
-            imageData.setImageType(ImageType.PICTURE_TYPE_PNG);
-            // 上 右 下 左 需要留空
-            // 这个类似于 css 的 margin
-            // 这里实测 不能设置太大 超过单元格原始大小后 打开会提示修复。暂时未找到很好的解法。
-            imageData.setTop(5);
-            imageData.setRight(40);
-            imageData.setBottom(5);
-            imageData.setLeft(5);
+                imageDemoData.setFeedbackNumber("C20230816000000" + x);
+                imageDemoData.setFeedbackType("游客" + x);
+                imageDemoData.setFeedbackChannel("小程序");
+                imageDemoData.setFeedbackUserName("李*" + x);
+                imageDemoData.setFeedbackMobile("16766766712");
 
-            // 放入第二个图片
-            imageData = new ImageData();
-            imageDataList.add(imageData);
-            writeCellData.setImageDataList(imageDataList);
-            imageData.setImage(FileUtils.readFileToByteArray(new File(imagePath)));
-            imageData.setImageType(ImageType.PICTURE_TYPE_PNG);
-            imageData.setTop(5);
-            imageData.setRight(5);
-            imageData.setBottom(5);
-            imageData.setLeft(50);
-            // 设置图片的位置 假设 现在目标 是 覆盖 当前单元格 和当前单元格右边的单元格
-            // 起点相对于当前单元格为0 当然可以不写
-            imageData.setRelativeFirstRowIndex(0);
-            imageData.setRelativeFirstColumnIndex(0);
-            imageData.setRelativeLastRowIndex(0);
-            // 前面3个可以不写  下面这个需要写 也就是 结尾 需要相对当前单元格 往右移动一格
-            // 也就是说 这个图片会覆盖当前单元格和 后面的那一格
-            imageData.setRelativeLastColumnIndex(1);
+                imageDemoData.setFeedbackDateTime(DateUtils.parseDate("2020-01-01 01:01:01"));
+                imageDemoData.setOperator("测试运营方");
+                imageDemoData.setParkName("测试园区名称");
+                imageDemoData.setQuestionType("功能异常");
+                imageDemoData.setDescribe("无法跳转到支付页面，希望尽快解决问题，");
+                imageDemoData.setProcessingStatus("未处理");
+
+                WriteCellData<Void> writeCellData = new WriteCellData<>();
+                writeCellData.setType(CellDataTypeEnum.STRING);
+
+                List<ImageData> imageDataList = new ArrayList<>(1);
+                ImageData image = new ImageData();
+                image.setImage(FileUtils.readFileToByteArray(new File(imagePath)));
+                image.setImageType(ImageType.PICTURE_TYPE_PNG);
+                image.setTop(5);
+                image.setRight(5);
+                image.setBottom(5);
+                image.setLeft(5);
+                imageDataList.add(image);
+                writeCellData.setImageDataList(imageDataList);
+
+                Class<?> clazz = imageDemoData.getClass();
+                for (int i = 0; i < 9; i++) {
+                    String fieldName = "picture" + i;
+                    Field field = clazz.getDeclaredField(fieldName);
+                    field.setAccessible(true);
+                    field.set(imageDemoData, writeCellData);
+                }
+
+                list.add(imageDemoData);
+            }
+
+
 
             // 写入数据
-            EasyExcel.write(fileName, ImageDemoData.class).sheet().doWrite(list);
+            EasyExcel.write(fileName, ImageDemoData.class).sheet("发动机").doWrite(list);
         }
     }
 
@@ -460,7 +445,7 @@ public class WriteTest {
         // 背景设置为红色
         headWriteCellStyle.setFillForegroundColor(IndexedColors.RED.getIndex());
         WriteFont headWriteFont = new WriteFont();
-        headWriteFont.setFontHeightInPoints((short)20);
+        headWriteFont.setFontHeightInPoints((short) 20);
         headWriteCellStyle.setWriteFont(headWriteFont);
         // 内容的策略
         WriteCellStyle contentWriteCellStyle = new WriteCellStyle();
@@ -470,7 +455,7 @@ public class WriteTest {
         contentWriteCellStyle.setFillForegroundColor(IndexedColors.GREEN.getIndex());
         WriteFont contentWriteFont = new WriteFont();
         // 字体大小
-        contentWriteFont.setFontHeightInPoints((short)20);
+        contentWriteFont.setFontHeightInPoints((short) 20);
         contentWriteCellStyle.setWriteFont(contentWriteFont);
         // 这个策略是 头是头的样式 内容是内容的样式 其他的策略可以自己实现
         HorizontalCellStyleStrategy horizontalCellStyleStrategy =
