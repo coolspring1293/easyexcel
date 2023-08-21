@@ -228,17 +228,15 @@ public class WriteTest {
         EasyExcel.write(fileName, ConverterData.class).sheet("模板").doWrite(data());
     }
 
-    private static final DateTimeFormatter DATE_TIME_FORMATTER = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
-
     /**
      * 图片导出
      * <p>
-     * 1. 创建excel对应的实体对象 参照{@link ImageDemoData}
+     * 1. 创建excel对应的实体对象 参照{@link FeedbackExcelData}
      * <p>
      * 2. 直接写即可
      */
     @Test
-    public void imageWrite() throws Exception {
+    public void feedbackWrite() throws Exception {
         String fileName = TestFileUtil.getPath() + "imageWrite" + System.currentTimeMillis() + ".xlsx";
 
         // 这里注意下 所有的图片都会放到内存 暂时没有很好的解法，大量图片的情况下建议 2选1:
@@ -247,27 +245,28 @@ public class WriteTest {
 
         String imagePath = TestFileUtil.getPath() + "converter" + File.separator + "iOS.png";
         try (InputStream inputStream = FileUtils.openInputStream(new File(imagePath))) {
-            List<ImageDemoData> list = ListUtils.newArrayList();
+            List<FeedbackExcelData> list = ListUtils.newArrayList();
 
             for(int x = 1; x < 100; ++ x) {
-                ImageDemoData imageDemoData = new ImageDemoData();
+                FeedbackExcelData feedbackExcelData = new FeedbackExcelData();
 
-                imageDemoData.setFeedbackNumber("C20230816000000" + x);
-                imageDemoData.setFeedbackType("游客" + x);
-                imageDemoData.setFeedbackChannel("小程序");
-                imageDemoData.setFeedbackUserName("李*" + x);
-                imageDemoData.setFeedbackMobile("16766766712");
+                feedbackExcelData.setFeedbackNumber("C20230816000000" + x);
+                feedbackExcelData.setFeedbackType("游客" + x);
+                feedbackExcelData.setFeedbackChannel("小程序");
+                feedbackExcelData.setFeedbackUserName("李*" + x);
+                feedbackExcelData.setFeedbackMobile("16766766712");
 
-                imageDemoData.setFeedbackDateTime(DateUtils.parseDate("2020-01-01 01:01:01"));
-                imageDemoData.setOperator("测试运营方");
-                imageDemoData.setParkName("测试园区名称");
-                imageDemoData.setQuestionType("功能异常");
-                imageDemoData.setDescribe("无法跳转到支付页面，希望尽快解决问题，");
-                imageDemoData.setProcessingStatus("未处理");
+                feedbackExcelData.setFeedbackDateTime(DateUtils.parseDate("2020-01-01 01:01:01"));
+                feedbackExcelData.setOperator("测试运营方");
+                feedbackExcelData.setParkName("测试园区名称");
+                feedbackExcelData.setQuestionType("功能异常");
+                feedbackExcelData.setDescribe("无法跳转到支付页面，希望尽快解决问题，");
+                feedbackExcelData.setProcessingStatus("未处理");
 
                 WriteCellData<Void> writeCellData = new WriteCellData<>();
                 writeCellData.setType(CellDataTypeEnum.STRING);
 
+                // 图片
                 List<ImageData> imageDataList = new ArrayList<>(1);
                 ImageData image = new ImageData();
                 image.setImage(FileUtils.readFileToByteArray(new File(imagePath)));
@@ -279,21 +278,19 @@ public class WriteTest {
                 imageDataList.add(image);
                 writeCellData.setImageDataList(imageDataList);
 
-                Class<?> clazz = imageDemoData.getClass();
+                Class<?> clazz = feedbackExcelData.getClass();
                 for (int i = 0; i < 9; i++) {
                     String fieldName = "picture" + i;
                     Field field = clazz.getDeclaredField(fieldName);
                     field.setAccessible(true);
-                    field.set(imageDemoData, writeCellData);
+                    field.set(feedbackExcelData, writeCellData);
                 }
 
-                list.add(imageDemoData);
+                list.add(feedbackExcelData);
             }
 
-
-
             // 写入数据
-            EasyExcel.write(fileName, ImageDemoData.class).sheet("发动机").doWrite(list);
+            EasyExcel.write(fileName, FeedbackExcelData.class).sheet("反馈Sheet").doWrite(list);
         }
     }
 

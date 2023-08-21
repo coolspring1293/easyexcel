@@ -6,7 +6,6 @@ import com.alibaba.excel.annotation.write.style.ColumnWidth;
 import com.alibaba.excel.annotation.write.style.ContentLoopMerge;
 import com.alibaba.excel.annotation.write.style.ContentRowHeight;
 import com.alibaba.excel.metadata.data.WriteCellData;
-
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;
@@ -14,15 +13,15 @@ import lombok.Setter;
 import java.util.Date;
 
 /**
- * 图片导出类
+ * 反馈Excel对象
  *
- * @author Jiaju Zhuang
+ * @author 892268
  */
 @Getter
 @Setter
 @EqualsAndHashCode
 @ContentRowHeight(100)
-public class ImageDemoData {
+public class FeedbackExcelData {
 
     @ColumnWidth(20)
     @ExcelProperty(value = "反馈单号")
